@@ -5,6 +5,7 @@ from state import AgentState
 from datetime import datetime
 from copy import deepcopy
 from models import PlanSection
+from rag import rag  # Import RAG system
 
 SYSTEM_PROMPT = """
 FORMAT CONTRACT (MANDATORY – NO EXCEPTIONS):
@@ -416,11 +417,26 @@ def conversation_agent(state: AgentState) -> AgentState:
     research_mode = state.get("research_mode", "single")
     attached_files = state.get("attached_files", [])
 
+    # RAG Retrieval
+    rag_context = ""
+    last_message = messages[-1]
+    if isinstance(last_message, HumanMessage):
+        query_text = last_message.content
+        # Avoid querying if it's a control message or very short
+        if len(query_text) > 5 and not query_text.startswith("["):
+            try:
+                rag_context = rag.query(query_text)
+                if rag_context:
+                    print(f"DEBUG: RAG Context found for query '{query_text[:50]}...'")
+            except Exception as e:
+                print(f"DEBUG: RAG Query failed: {e}")
+
     context_data = {
         "plan": plan_summary,
         "research_result": research_result, # Result of LAST step
         "research_mode": research_mode,
         "attached_files": attached_files,
+        "rag_context": rag_context,  # Add RAG context
         "research_plan_status": {
             "total_tasks": len(research_plan) if research_plan else 0,
             "current_task_index": current_task_index,

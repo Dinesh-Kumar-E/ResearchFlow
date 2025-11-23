@@ -20,6 +20,7 @@ from state import AgentState
 from models import ChatRequest, ChatResponse, AccountPlan
 from llm_clients import api_key
 from openai import OpenAI
+from rag import rag  # Import RAG system
 
 client = OpenAI(api_key=api_key)
 
@@ -396,6 +397,14 @@ async def upload_file(file: UploadFile = File(...)):
                 purpose="assistants"
             )
             
+        # Index into ChromaDB (Tiny RAG)
+        try:
+            with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
+                content = f.read()
+                rag.add_document(content, file.filename)
+        except Exception as e:
+            print(f"RAG Indexing failed for {file.filename}: {e}")
+
         # Clean up local file
         os.remove(file_path)
         

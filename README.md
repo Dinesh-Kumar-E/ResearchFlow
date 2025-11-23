@@ -1,4 +1,13 @@
-# Research Flow
+<table style="border-collapse:collapse; border:0; margin:0; padding:0;">
+    <tr>
+        <td style="border:0; padding:0; vertical-align:middle;">
+            <img src="./Assets/icon.png" alt="Research Flow" width="48" height="48" style="display:block; border:0;" />
+        </td>
+        <td style="border:0; padding-left:8px; vertical-align:middle;">
+            <h1 style="margin:0;">Research Flow</h1>
+        </td>
+    </tr>
+</table>
 
 **Company Research Assistant & Account Plan Generator**
 
@@ -10,6 +19,7 @@ Research Flow is an interactive AI agent designed to help users research compani
 - **Autonomous Research Agent**: The system can trigger a dedicated research workflow to gather and synthesize information before responding.
 - **Dynamic Plan Generation**: Automatically creates and updates structured "Account Plans" based on conversation context.
 - **Data Visualization**: Integrated Mermaid.js support for generating flowcharts, diagrams, and graphs directly in the chat.
+- **RAG & Vector Search**: Uses ChromaDB and Sentence Transformers for efficient document retrieval and context-aware responses.
 - **File Analysis**: Support for uploading and analyzing documents to provide context-aware insights.
 - **Text-to-Speech**: Real-time audio playback of AI responses using Deepgram's Aura models.
 - **Session Management**: Persistent chat history and plan states.
@@ -19,6 +29,8 @@ Research Flow is an interactive AI agent designed to help users research compani
 ### Backend
 - **Framework**: [FastAPI](https://fastapi.tiangolo.com/)
 - **Orchestration**: [LangGraph](https://langchain-ai.github.io/langgraph/) & [LangChain](https://www.langchain.com/)
+- **Vector DB**: [ChromaDB](https://www.trychroma.com/)
+- **Embeddings**: [Sentence Transformers](https://www.sbert.net/)
 - **AI Models**: OpenAI (GPT-4o/mini), Deepgram (TTS)
 - **Runtime**: Python 3.12+
 - **Package Manager**: `uv` (recommended) or `pip`
@@ -32,11 +44,13 @@ Research Flow is an interactive AI agent designed to help users research compani
 
 ## Screenshots
 
-![](./Asserts/1.png)
+![](./Assets/0.png)
 
-![](./Asserts/2.png)
+![](./Assets/1.png)
 
-![](./Asserts/3.png)
+![](./Assets/2.png)
+
+![](./Assets/3.png)
 
 ## Getting Started
 
@@ -74,7 +88,7 @@ pip install uv
 uv sync
 
 # Run the server
-uv run uvicorn main:api --reload
+uv run python -m uvicorn main:api --reload
 ```
 
 Alternatively, using standard pip:
@@ -110,9 +124,48 @@ Open your browser and navigate to the local host URL shown in the terminal (usua
 ## Architecture
 
 The application uses a **Graph-based Architecture** (LangGraph) to manage the state of the conversation.
+
+```mermaid
+%%{init: {'theme': 'neutral'}}%%
+graph TD
+    %% Client Side
+    User([User]) <-->|Interacts| Frontend[React Frontend]
+    
+    %% Backend API
+    Frontend <-->|HTTP API| Backend[FastAPI Backend]
+    
+    %% RAG System
+    Backend -->|Index Documents| ChromaDB[(ChromaDB Vector Store)]
+    
+    %% LangGraph Flow
+    Start((Start)) --> ConversationNode[Conversation Node]
+    
+    ConversationNode -->|Query Context| ChromaDB
+    ConversationNode -->|LLM Call| OpenAI[OpenAI GPT-4o]
+    
+    ConversationNode -->|Decision| CheckIntent{Intent?}
+    
+    CheckIntent -->|Research Needed| ResearchNode[Research Node]
+    CheckIntent -->|Direct Reply| End((End))
+    
+    ResearchNode -->|Web Search & Synthesis| Perplexity[Perplexity AI]
+    ResearchNode -->|Update State| ConversationNode
+    
+    %% State Management
+    ConversationNode -->|Update Plan| AgentState[Agent State / Session]
+    ResearchNode -->|Update Findings| AgentState
+    
+    %% Output
+    Backend -->|Stream Response| Frontend
+    Frontend -->|Render| Mermaid[Mermaid Diagrams]
+    Frontend -->|Render| Plan[Account Plan]
+    Frontend -->|Play Audio| Deepgram[Deepgram TTS]
+```
+
 1.  **Conversation Node**: Handles normal user interactions and intent classification.
 2.  **Research Node**: Triggered when the AI detects a need for external information. It performs a search, synthesizes findings, and updates the context.
-3.  **State Management**: The `AgentState` tracks the conversation history, current plan, and attached files.
+3.  **RAG System**: Indexes uploaded documents using ChromaDB for semantic search and retrieval.
+4.  **State Management**: The `AgentState` tracks the conversation history, current plan, and attached files.
 
 ## License
 
