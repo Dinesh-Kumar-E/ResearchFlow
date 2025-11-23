@@ -1,13 +1,5 @@
-<table style="border-collapse:collapse; border:0; margin:0; padding:0;">
-    <tr>
-        <td style="border:0; padding:0; vertical-align:middle;">
-            <img src="./Assets/icon.png" alt="Research Flow" width="48" height="48" style="display:block; border:0;" />
-        </td>
-        <td style="border:0; padding-left:8px; vertical-align:middle;">
-            <h1 style="margin:0;">Research Flow</h1>
-        </td>
-    </tr>
-</table>
+# Research Flow
+
 
 **Company Research Assistant & Account Plan Generator**
 
