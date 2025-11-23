@@ -30,7 +30,7 @@ Research Flow is an interactive AI agent designed to help users research compani
 - **Icons**: [Lucide React](https://lucide.dev/)
 - **Diagrams**: [Mermaid.js](https://mermaid.js.org/)
 
-## 📸 Screenshots
+## Screenshots
 
 ![](./Asserts/1.png)
 
@@ -107,17 +107,17 @@ npm run dev
 
 Open your browser and navigate to the local host URL shown in the terminal (usually `http://localhost:5173`) to use Research Flow.
 
-## 🧠 Architecture
+## Architecture
 
 The application uses a **Graph-based Architecture** (LangGraph) to manage the state of the conversation.
 1.  **Conversation Node**: Handles normal user interactions and intent classification.
 2.  **Research Node**: Triggered when the AI detects a need for external information. It performs a search, synthesizes findings, and updates the context.
 3.  **State Management**: The `AgentState` tracks the conversation history, current plan, and attached files.
 
-## 📝 License
+## License
 
 [MIT](LICENSE)
 
-## 🎓 Acknowledgements
+## Acknowledgements
 
 This project was developed as part of an interview process at **Eightfold AI**.
