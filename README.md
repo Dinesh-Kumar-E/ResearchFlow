@@ -47,6 +47,8 @@ Research Flow is an interactive AI agent designed to help users research compani
 
 ## Getting Started
 
+![](./Assets/4.png)
+
 ### Prerequisites
 - Python 3.12 or higher
 - Node.js 18 or higher

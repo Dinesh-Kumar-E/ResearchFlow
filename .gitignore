@@ -7,3 +7,4 @@ __pycache__/
 backend/sessions.json
 backend/env/
 .DS_Store
+backend/chroma_db/
